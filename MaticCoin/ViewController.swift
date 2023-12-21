@@ -7,9 +7,9 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
-    
-    let coinManager = CoinManager()
+class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, CoinManagerDelegate {
+
+    var coinManager = CoinManager()
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -36,8 +36,19 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         super.viewDidLoad()
         currencyPicker.dataSource = self
         currencyPicker.delegate = self
+        coinManager.delegate = self
     }
-
+    
+    func didFailWithError(error: Error) {
+        print(error)
+    }
+    
+    func didUpdateRate(price: String, currency: String) {
+        DispatchQueue.main.async {
+            self.currencyLabel.text = currency
+            self.maticLabel.text = price
+        }
+    }
 
 }
 
