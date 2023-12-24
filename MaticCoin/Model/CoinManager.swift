@@ -56,21 +56,27 @@ struct CoinManager {
                         let priceString = String(format: "%.2f", maticPrice)
                         delegate?.didUpdateRate(price: priceString, currency: currency)
                     }
-//                    let dataString = String(decoding: safeData, as: UTF8.self)
-//                    print("Received data as string: \(dataString )")
+                    //                    let dataString = String(decoding: safeData, as: UTF8.self)
+                    //                    print("Received data as string: \(dataString )")
                 }
             }
             //Start the task
             task.resume()
         }
     }
+    // This function takes raw JSON data, tries to decode it into a specific Swift type (CoinData), extracts a Double value (rate), and returns it. If anything goes wrong during the decoding process, it handles the error by notifying a delegate and returns nil.
     func parseJSON(_ data: Data ) -> Double? {
+        //This line creates an instance of JSONDecoder, a class provided by Swift for decoding JSON data into Swift data type
         let decoder = JSONDecoder()
+        //do-catch block is used for error handling
+        //do: Inside the do block, the code that might throw an error is written.
         do {
+            //This line attempts to decode the JSON data
             let decodedData = try decoder.decode(CoinData.self, from: data)
             let lastPrice = decodedData.rate
             print(lastPrice)
             return lastPrice
+            //catch: If an error occurs in the do block, the control moves to the catch block where the error can be handled.
         } catch {
             delegate?.didFailWithError(error: error)
             return nil
